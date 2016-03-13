@@ -1,4 +1,4 @@
-angular.module('starter.controllers', ['firebase', 'starter.services'])
+angular.module('starter.controllers', ['starter.services'])
 
   .controller('DashCtrl', function($scope) {
 
@@ -35,7 +35,16 @@ angular.module('starter.controllers', ['firebase', 'starter.services'])
     };
   })
 
-  .controller("LoginCtrl", function($scope, Auth, $state) {
+  .controller("LoginCtrl", function($scope, Auth, $state,$http) {
+
+    //if ($scope.authData === null) {
+    //  console.log("Not logged in yet");
+    //  $scope.authData = null;
+    //} else {
+    //  console.log("Logged in as", authData.uid);
+    //  $state.go('tab.dash');
+    //}
+
 
     $scope.login = function() {
       Auth.$authWithOAuthRedirect("facebook").then(function(authData) {
@@ -61,9 +70,22 @@ angular.module('starter.controllers', ['firebase', 'starter.services'])
         $scope.authData = null;
       } else {
         console.log("Logged in as", authData.uid);
-        $state.go('tab.dash');
+        $scope.authData = authData; // This will display the user's name in our view
+        //$state.go('tab.dash');
+        $http({
+          method: 'GET',
+          url: 'http://173.255.228.56:9000/user/1958979414326200'
+        }).then(function successCallback(response) {
+          // this callback will be called asynchronously
+          // when the response is available
+          $scope.val = response.data;
+        }, function errorCallback(response) {
+          // called asynchronously if an error occurs
+          // or server returns response with an error status.
+          $scope.val = response.data;
+        });
+
       }
-      $scope.authData = authData; // This will display the user's name in our view
     });
 
   });
