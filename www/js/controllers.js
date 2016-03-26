@@ -4,7 +4,7 @@ angular.module('starter.controllers', ['starter.services'])
 
   })
 
-  .controller('ChatsCtrl', function($scope, Chats) {
+  .controller('ChatsCtrl', function($scope, Chats,Auth) {
     // With the new view caching in Ionic, Controllers are only called
     // when they are recreated or on app start, instead of every page change.
     // To listen for when this page is active (for example, to refresh data),
@@ -37,15 +37,6 @@ angular.module('starter.controllers', ['starter.services'])
 
   .controller("LoginCtrl", function($scope, Auth, $state,$http) {
 
-    //if ($scope.authData === null) {
-    //  console.log("Not logged in yet");
-    //  $scope.authData = null;
-    //} else {
-    //  console.log("Logged in as", authData.uid);
-    //  $state.go('tab.dash');
-    //}
-
-
     $scope.login = function() {
       Auth.$authWithOAuthRedirect("facebook").then(function(authData) {
         // User successfully logged in
@@ -54,7 +45,7 @@ angular.module('starter.controllers', ['starter.services'])
           Auth.$authWithOAuthPopup("facebook").then(function(authData) {
             // User successfully logged in. We can log to the console
             // since we’re using a popup here
-            console.log(authData);
+            console.log(authData.facebook.displayName);
             //$scope.authData = authData; // This will display the user's name in our view
           });
         } else {
@@ -63,28 +54,15 @@ angular.module('starter.controllers', ['starter.services'])
         }
       });
     };
-
+    
     Auth.$onAuth(function(authData) {
       if (authData === null) {
-        console.log("Not logged in yet");
-        $scope.authData = null;
+        alert("Not logged in yet");
+        $scope.authData = authData;
       } else {
-        console.log("Logged in as", authData.uid);
+        alert("Logged in as" + authData.facebook.displayName);
         $scope.authData = authData; // This will display the user's name in our view
-        //$state.go('tab.dash');
-        $http({
-          method: 'GET',
-          url: 'http://173.255.228.56:9000/user/1958979414326200'
-        }).then(function successCallback(response) {
-          // this callback will be called asynchronously
-          // when the response is available
-          $scope.val = response.data;
-        }, function errorCallback(response) {
-          // called asynchronously if an error occurs
-          // or server returns response with an error status.
-          $scope.val = response.data;
-        });
-
+        $state.go('tab.dash');
       }
     });
 

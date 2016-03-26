@@ -2,7 +2,7 @@ angular.module('starter.services', ['firebase'])
 
   .factory("Auth", function($firebaseAuth) {
     //TODO: Important! Replace URL with your own Firebase App's URL
-    var usersRef = new Firebase("https//ajionicfirebasetest.firebaseio.com/users");
+    var usersRef = new Firebase("https://ajionicfirebasetest.firebaseio.com/users");
     return $firebaseAuth(usersRef);
   })
 
